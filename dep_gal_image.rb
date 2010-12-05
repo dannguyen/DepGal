@@ -2,13 +2,11 @@ load 'rag_mag/rag_image.rb'
 
 module DepGal
 
-  class Image #not to be confused with class RagImage
+  class ImageEntry #not to be confused with class RagImageEntry
     attr_accessor :base_filename, :base_subdir, :source_filename
     attr_accessor :source_path, :export_path
-    attr_accessor :versions
-   
+    attr_accessor :versions   
     attr_accessor :metadata
-   
     attr_accessor :rag_image
      # private :rag_image 
     
@@ -20,14 +18,17 @@ module DepGal
      # @base_subdir = "#{sub_dir}/"
       
      # @export_path = x_path
-      @versions = ['original']
       @metadata = {}
     end
     
     def init_process
       @rag_image=RagImage.new(self.source_filename)
-      @rag_image.build
+      self.build()
       @metadata['exif'] = (@rag_image.exif)
+    end
+    
+    def build
+      @rag_image.build
     end
     
     def rag_image_exists?
@@ -57,11 +58,20 @@ module DepGal
       @rag_image.output("#{version_dir}/#{@base_filename}")      
     end
 
-    def build
-      init_process
-      export_original
+    
+    def create_versions(vers, image_dir)
+      @versions = vers.collect.inject({}){|hash, version|
+        dir = "#{image_dir}/#{version[0]}"
+        FileUtils.makedirs(dir)
+        h = {'width'=>version[1]['width'], 'path'=>"#{dir}/#{@base_filename}" }       
+        @rag_image.create_image(h['path'], {:width=>h['width']})
+        hash[version[0]] = h
+        hash
+      }
     end
     
+    def create_version(hash)
+    end
     
     #convenience methods
     def original_filename 

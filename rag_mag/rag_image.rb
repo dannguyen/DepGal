@@ -24,7 +24,7 @@ class RagImage
   end
   
   def build(fn=@filename)
-    Magick::Image::read(fn).first
+    @_img = Magick::Image::read(fn).first
   end
   
   def destroyed?
@@ -52,6 +52,18 @@ class RagImage
     # reduce file for analysis
     @_imgq = @_img.resize(@@WORKING_SCALE).quantize(256, Magick::GRAYColorspace)
     #@_imgq = @_imgq.
+  end
+  
+  def create_image(path, opt={})
+    puts "**"
+    puts "Creating #{path}\n\tSize: #{opt[:size]}"
+    
+    imgn = @_img.clone
+    imgn.resize_to_fit!(opt[:width]) if opt[:width].to_i > 0
+    imgn.write(path)
+    
+    
+    
   end
   
   def output(outname, imgn = nil)

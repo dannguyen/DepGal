@@ -25,7 +25,6 @@ end
 
 
 def fuf_find_uniq_filename(str)
-  
    if File.exists?str
       str_p = str.split('.', 2)
       count = 1

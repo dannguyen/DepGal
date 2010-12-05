@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'logger'
 require 'rmagick'
+load 'dep_gal_convenience.rb'
 load 'dep_gal_image.rb'
 require 'yaml'
 
@@ -10,6 +11,14 @@ module DepGal
   @@PHOTO_FILE_EXT = %W[jpg JPG png PNG jpeg JPEG]
 
   #@@CONFIG_VARS = ['filename_config', 'filenames_photos', 'dirname_source', 'dirname_project', 'dirname_project_photos' , 'dirname_root']
+  
+  def gogo(path='test_config.yml')
+    p= DepGal::create_project('test_config.yml'); 
+    p.build
+    p.create_files
+    p.finish
+    p
+  end
   
   def create_project(config, opt={})
     ragmag = DepGal::Project.new(config, opt)
@@ -21,7 +30,7 @@ module DepGal
     attr_accessor :image_list, :images, :image_list_file_h
     attr_accessor :is_built, :logger, :log_filename
 
-    attr_accessor :image_versions
+    attr_accessor :standard_image_versions
 
 ###### initialize methods
 
@@ -46,7 +55,7 @@ module DepGal
  
     def init_config
       @log.info("Initializing configuration")
-      @config = init_yaml(@config_filename, {:validate_keys=>['directories', 'meta', ['directories','root_path']]})
+      @config = init_yaml(@config_filename, {:validate_keys=>['directories', 'meta', ['directories','rootPath']]})
       
       
       initial_dirs.each_pair{|k,v| 
@@ -59,6 +68,14 @@ module DepGal
           raise Exception, e
         end
       }
+      
+      # calculating standard_image_versions
+      @standard_image_versions = {'thumbnail'=>{'width'=>thumbnail_width}, 'large'=>{'width'=>image_viewer_width}}
+      
+      @standard_image_versions.each_pair do |k,v|
+        @log.info("Image versions: #{k} - #{v}")
+      end
+      
       @config
     end
 
@@ -79,7 +96,6 @@ module DepGal
           @log.info("#{m} already exists")
         else
           @log.info("#{m} being created")
-
           FileUtils.makedirs(v)  
         end    
       end
@@ -94,6 +110,7 @@ module DepGal
       if File.exists?(image_list_filename) && !@options[:overwrite_image_list]==true
         @log.info("#{image_list_filename} exists")
         @images = load_image_list()
+        
         # parse yaml if exists
       else
         
@@ -104,131 +121,118 @@ module DepGal
         
         @images = image_filenames.inject([]){|a, fname|
           @log.info("Image File: #{fname}")
-          rimage = DepGal::Image.new(fname)
+          rimage = DepGal::ImageEntry.new(fname)
           rimage.init_process
           a << rimage
         }
+        
+        write_image_list()
       end
       
+    end
+    
+    
+    
+    ### create processes
+    #
+  
+    def create_files
+      @log.info("Create Files Phase")
 
+      create_image_versions()
+      
       
     end
-    
+  
+    def create_image_versions
+    # image reads in DepGal::Image
+  
+      @log.info("Building versions of image files: #{@standard_image_versions.collect{|i| "#{i[0]} (#{i[1]}px)" }.join(', ')}")
     
 
-    
-  ### output processes
-  #
-  
-  def build_image_files(image)
-  # image reads in DepGal::Image
-  
-    
-  end  
-    
-    
-  ########
-  
-  def finish
-    @log.info("Finishing and closing project")
-    write_image_list
-  end
-  
-  
-  
-  
-  
-  #########
-  def write_image_list
-    @log.info("Writing images to #{image_list_filename}")
-    image_list_file_h = File.open(image_list_filename, 'w')
-    
-    @images.each do |rimage|
-      YAML.dump(rimage, image_list_file_h)
-    end
-    image_list_file_h.close
-  end
-  
-  def load_image_list
-    @log.info("Loading images from #{image_list_filename}")
-    arr = []
-    File.open(image_list_filename){|file|
-      YAML.load_documents(file){|image|
-        puts image.source_filename
-        arr << image
-      }
-    }
-    arr
-  end
-
-
-
-  def init_yaml(filename, opt = {})
-    @log.info("Opening YAML: #{filename}")
-    yaml = nil
-    e = ''
-    if filename.blank?
-      e = "Can't leave filename blank"
-    elsif !File.exists?(filename)
-      e = "YAML #{filename} doesn't exist!"
-    else
-      yaml = YAML.load(File.open(filename))
-      unless opt[:validate_keys].blank?
-        invalid_keys = []
-        opt[:validate_keys].each do |key|
-          invalid_keys << key if yaml.dig(*key).blank?
+      @standard_image_versions.each_key do |version|
+        v = "#{project_image_dir}/#{version}"
+        
+        if !File.exists?(v)
+          @log.info("#{v} being created")
+          FileUtils.makedirs(v)        
         end
-        e = "#{filename}: Keys #{invalid_keys.join(',')} are invalid" if invalid_keys.length > 0
+      
       end
-    end
-    
-    if !e.blank?
-      @log.error(e)
-      raise Exception, e
-    else
-      return yaml
+      
+      @images.each do |image|
+        image.create_versions(@standard_image_versions, project_image_dir)
+      end
+      
     end  
-  end
-
-
-
-  #convenience methods
+    
+    
+    ########
   
-    def root_path
-      File.expand_path(@config['directories']['root_path'])
+    def finish
+      @log.info("Finishing and closing project")
+      write_image_list
     end
   
-    def source_image_dir
-      "#{root_path}/#{@config['directories']['source_image_dir']}"
+  
+  
+  
+  
+    #########
+    def write_image_list
+      @log.info("Writing images to #{image_list_filename}")
+      image_list_file_h = File.open(image_list_filename, 'w')
+    
+      @images.each do |rimage|
+        YAML.dump(rimage, image_list_file_h)
+      end
+      image_list_file_h.close
+    end
+  
+    def load_image_list
+      @log.info("Loading images from #{image_list_filename}")
+      arr = []
+      File.open(image_list_filename){|file|
+        YAML.load_documents(file){|image|
+          puts image.source_filename
+          image.build
+          arr << image
+        }
+      }
+      arr
     end
 
-    def project_dir
-      "#{root_path}/#{@config['directories']['project_dir']}"
+
+
+    def init_yaml(filename, opt = {})
+      @log.info("Opening YAML: #{filename}")
+      yaml = nil
+      e = ''
+      if filename.blank?
+        e = "Can't leave filename blank"
+      elsif !File.exists?(filename)
+        e = "YAML #{filename} doesn't exist!"
+      else
+        yaml = YAML.load(File.open(filename))
+        unless opt[:validate_keys].blank?
+          invalid_keys = []
+          opt[:validate_keys].each do |key|
+            invalid_keys << key if yaml.dig(*key).blank?
+          end
+          e = "#{filename}: Keys #{invalid_keys.join(',')} are invalid" if invalid_keys.length > 0
+        end
+      end
+    
+      if !e.blank?
+        @log.error(e)
+        raise Exception, e
+      else
+        return yaml
+      end  
     end
-   
-   def project_image_dir
-     "#{project_dir}/images" 
-   end
- 
-   def initial_dirs
-     {'Root path'=>root_path, 'Source directory for images'=>source_image_dir}
-   end
- 
-   def build_dirs
-     {'Project directory'=>project_dir, 'Project images directory'=>project_image_dir}
-   end
- 
-   def image_list_filename 
-     "#{project_dir}/image_list.yml"
-   end
-   
-   
-   ### image attributes
-   
-   def image_viewer_width
-     g = @config['gallery']['image_viewer_width']
-     g.blank? ? @config['gallery']['width'] : g
-   end
+
+
+
 
   end
   # end of class Project
