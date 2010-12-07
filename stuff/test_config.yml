@@ -1,0 +1,30 @@
+meta:
+    name: Portfolio
+    byline: Dan Nguyen
+controls:
+    infiniteScroll: false
+facets:
+    on: 
+        - keywords
+        - rating
+directories:
+    rootPath: ~/projects/depgal_working/working
+    projectDir: testproject
+    sourceImageDir: testimages 
+    sourceImageSubDirs: false
+gallery:
+    per_page: 20
+    width: 600
+    imageViewerWidth: 600
+    sortBy: filename
+    columns: 
+        number: 4
+        margin: 5
+    marginY: 5
+images:
+    yamlList: '~/lorem'
+    padding: '0 0 0 0'
+    border: 0
+    borderColor: 0
+    
+    
