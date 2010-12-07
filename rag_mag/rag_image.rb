@@ -55,15 +55,9 @@ class RagImage
   end
   
   def create_image(path, opt={})
-    puts "**"
-    puts "Creating #{path}\n\tSize: #{opt[:size]}"
-    
     imgn = @_img.clone
     imgn.resize_to_fit!(opt[:width]) if opt[:width].to_i > 0
     imgn.write(path)
-    
-    
-    
   end
   
   def output(outname, imgn = nil)
