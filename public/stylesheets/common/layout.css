@@ -1,0 +1,10 @@
+div#content{
+	width: 1280px;
+	height: 800px;
+}
+
+div.image{
+	margin: 10px;
+}
+div.image img{
+}

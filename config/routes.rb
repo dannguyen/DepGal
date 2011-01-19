@@ -1,4 +1,8 @@
 Depgal::Application.routes.draw do
+  
+  
+  resources :images
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

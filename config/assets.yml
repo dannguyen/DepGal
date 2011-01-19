@@ -1,0 +1,18 @@
+package_assets: on
+compress_assets: on
+javascript_compressor: closure
+
+javascripts:
+  common:
+    - public/javascripts/common/jquery.js
+    - public/javascripts/common/*.js
+  plugins:
+    - public/javascripts/plugins/*.js
+  gallery:
+    - public/javascripts/gallery/*.js
+    
+stylesheets:
+  common: 
+    - public/stylesheets/common/*.css
+  mobile:
+    - public/stylesheets/mobile/*.css
