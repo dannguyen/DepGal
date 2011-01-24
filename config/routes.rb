@@ -2,7 +2,10 @@ Depgal::Application.routes.draw do
   
   
   resources :images
-
+  root :to => "images#index"
+  match 'images/tag/:tag'=>'images#images_tag', :as=>:images_tag 
+  match 'images/tag/:tag/show/:id'=>'images#image_tag', :as=>:image_tag
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

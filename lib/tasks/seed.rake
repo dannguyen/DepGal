@@ -1,5 +1,6 @@
 require 'lib/ragmag/dep_gal_helpers.rb'
 require 'lib/ragmag/rag_image.rb'
+require "#{Rails.root.to_s}/stuff/lib/read_xmp.rb"
 
 require 'pp'
 
@@ -27,8 +28,15 @@ namespace :seed do
         Images: #{image_filenames.length}\n\n
       }
       
+      Image.delete_all
+      
       image_filenames.each do |image_f|
         i = Image.new(:title=>File.basename(image_f), :source_path=>image_f)
+        x = XMPFile.new(i.source_path)
+        i.tag_list = x.keywords.join(', ')
+        i.rating = x.rating
+        
+        
         unless is_test
           if i.save
             puts "#{i.id} created:\t #{i.name}\n"

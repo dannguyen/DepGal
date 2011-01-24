@@ -9,4 +9,7 @@ jQuery(document).ready(function(){
 
 		itemSelector: 'div.image'
 	})
+	
+	//jQuery("a[rel='cbox']").colorbox({transition:"fade", opacity:0.7, width:'70%'});
+	
 })

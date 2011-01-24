@@ -2,10 +2,9 @@
 
 <% @images.each do |image| %>
 
-	<div class='image'>
-		<% i_path = image.thumbnail_path(rand(3))
-			dim = FastImage.size("#{RAILS_ROOT}/public#{i_path}")
-		%>
-		<%=link_to(image_tag(i_path, :width=>dim.andand[0], :height=>dim.andand[1]), image)%>	
-	</div>
+		<div class='image'>
+			<% img_ver = image.thumbnail(rand(3))%>
+			<%=link_to(image_tag(img_ver.path, :width=>img_ver.width, :height=>img_ver.height), 
+			@context.blank? ? image : send("image_#{@context[0]}_path", @context[1], image.id), :rel=>'cbox')%>	
+		</div>
 <% end %>

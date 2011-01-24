@@ -7,6 +7,8 @@ gem 'rmagick'
 gem 'jammit'
 gem 'andand'
 gem 'fastimage'
+gem 'nokogiri'
+gem 'acts-as-taggable-on'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 

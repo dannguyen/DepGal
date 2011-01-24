@@ -8,3 +8,8 @@ div.image{
 }
 div.image img{
 }
+
+
+img#for-show{
+	max-width: 1000px;
+}

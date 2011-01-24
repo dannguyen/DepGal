@@ -32,7 +32,7 @@ development:
             
         
     source:
-        dir: ~/projects/depgal_working/working/testimages 
+        dir: ~/projects/depgal_working/working_images/ 
         subDirs: false
     gallery:
         per_page: 20
