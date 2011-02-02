@@ -1,4 +1,9 @@
 <h1>Images</h1>
+<div class='pagination'>
+<%= will_paginate @images %>
+</div>	
+
+<div id="images-wrapper">
 
 <% @images.each do |image| %>
 
@@ -8,3 +13,10 @@
 			@context.blank? ? image : send("image_#{@context[0]}_path", @context[1], image.id), :rel=>'cbox')%>	
 		</div>
 <% end %>
+
+
+</div>
+
+<div class='pagination'>
+<%= will_paginate @images %>
+</div>

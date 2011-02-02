@@ -4,7 +4,8 @@ class ImagesController < ApplicationController
   end
 
   def index
-    @images = Image.all
+    @images = Image.paginate :page => params[:page], :per_page => 20
+    
   end
   
   def image_tag
