@@ -1,0 +1,48 @@
+<script type="text/javascript" charset="utf-8">
+
+	var min_height = 100;
+
+	jQuery(document).ready(function(){
+		jQuery("#somebutton").click(function(){
+			
+			
+			$.ajax({
+			  url: "<%=url_for({:controller=>'images', :action=>'index', :format=>'json'})%>",
+			  dataType: "json",
+		   
+			  success: function(images) {
+			    	
+					jQuery("#result").append("Hello " + images.length)
+					for(var i = 0; i<images.length; i++){
+						$("#images-wrapper").append("<div class=\"image\" style=\"width:"+images[i].thumbnail.width+"px; height:"+images[i].thumbnail.height+"px;\"><img src=\""+images[i].thumbnail.path+ "\" /></div>")
+					}
+					
+					
+					jQuery("#images-wrapper").masonry({
+						singleMode: false,
+						columnWidth: 200,
+						resizeable: false,
+						itemSelector: 'div.image'
+					})
+			  }
+			});
+			
+			
+		})
+	})
+</script>
+
+
+
+<div class="stuff">
+	<h1>Test</h1>
+	Good <strong id="somebutton">button</strong>
+	
+	<div id="result"></div>
+	
+	<div id="images-hold">
+	<div id="images-wrapper"></div>
+	</div>
+	
+</div>	
+

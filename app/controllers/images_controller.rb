@@ -4,8 +4,11 @@ class ImagesController < ApplicationController
   end
 
   def index
-    @images = Image.paginate :page => params[:page], :per_page => 20
-    
+    @images = Image.paginate :page => params[:page], :per_page => 50
+    respond_to do |format|
+      format.html
+      format.json{ render :json=>@images}
+    end
   end
   
   def image_tag

@@ -5,11 +5,14 @@ class Image < ActiveRecord::Base
   validates_uniqueness_of :source_path # to be taken out with paperclip
   before_destroy :clear_dirs
   acts_as_taggable 
-  attr_accessor :versions
+  attr_accessor :versions, :name
   
   @@styles = IMAGE_STYLES.map{|s| s[0]}
   @@versions = []
 
+  def as_json(options={})
+    {:name=>self.name, :thumbnail=>self.thumbnail(rand(3))}
+  end
   
   def self.styles
     @@styles
