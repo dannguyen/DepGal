@@ -1,0 +1,88 @@
+<script type="text/javascript" charset="utf-8">
+
+	var min_height = 100;
+	var current_image_index = 0;
+	var images_array = null;
+	var images_strip, images_wrapper, window_height, window_width, max_image_height;
+
+	function fooNextImage(){
+		current_image_index++; 
+		console.log("Current sliderpos: " + images_strip.offset().left + " Scrolling left: " + images_array[current_image_index].offsetLeft);
+		images_wrapper.scrollTo(images_array[current_image_index], 800, {onAfter:function(){fooDarkenImages(current_image_index);}} )
+		
+	}
+	
+	function fooDarkenImages(except_for_i){
+		for(var i=0; i< images_array.length; i++){
+			if( Math.abs(i-except_for_i) <= 1 ){
+				jQuery(images_array[i]).find("img").css("visibility", "visible");
+			}else{
+				jQuery(images_array[i]).css("visibility", "hidden");
+			}	
+			
+		}
+	}
+	
+	
+	jQuery(document).ready(function(){
+		
+		images_strip = jQuery("#images-strip");
+		images_wrapper = jQuery("#images-wrapper");
+		window_height = jQuery(window).height();
+		window_width = jQuery(window).width();
+		max_image_height = window_height * 0.90;
+		max_image_width= window_width * 0.90;
+		
+		jQuery("#images-wrapper").css("height", window_height)
+		jQuery("#next-b").click(function(){ fooNextImage(); });
+		
+		
+		jQuery("#somebutton").click(function(){
+			
+			
+			$.ajax({
+			  url: "<%=url_for({:controller=>'images', :action=>'index', :format=>'json'})%>",
+			  dataType: "json",
+		   
+			  success: function(images) {
+			    	
+					jQuery("#result").append("Hello " + images.length)
+					for(var i = 0; i<images.length; i++){
+						var image = images[i];
+						images_strip.css("width", images_strip.width()+window_width)
+						images_strip.append("<div class=\"image\" style=\"height:"+max_image_height+"px; width:"+max_image_width+"px\"><img style=\"height:"+max_image_height+"px\" src=\""+image.large.path+ "\" /></div>")
+					}
+				//	
+					images_array = jQuery("div.image")
+					
+			  }
+			});
+			
+			
+		})
+	})
+</script>
+
+
+
+<div class="stuff">
+	<h1>Test</h1>
+	Good <strong id="somebutton">button</strong>
+	<br>
+	<a id="next-b" class="button">
+		Next
+	</a>	
+	
+	<div id="result"></div>
+	
+	<div id="images-wrapper">
+		<div id="images-strip">
+			
+			
+			
+		</div>
+		
+	</div>
+	
+</div>	
+

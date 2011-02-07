@@ -4,12 +4,36 @@ div#content{
 }
 
 div.image{
+	float:left;
 	margin: 10px;
-}
+	cursor:pointer;
+}	
 div.image img{
 }
 
 
-img#for-show{
-	max-width: 1000px;
+
+#images-wrapper{
+	background: #ddffcc;
+	height: 95%;
+	width: 900px;
+	overflow:hidden;
+	position: relative;
+}
+
+div.image-wall{
+	position: relative;
+	left: 0;
+	top: 0;
+}
+
+div#images-strip, div#images-wall div.image{
+	margin: 10px;
+	background: #000;
+	float: left;
+}
+
+
+div.image.hidden img{
+	visibility: hidden;
 }

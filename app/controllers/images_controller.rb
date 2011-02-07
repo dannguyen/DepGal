@@ -3,8 +3,17 @@ class ImagesController < ApplicationController
     @image = Image.find(params[:id])
   end
 
+  def slideshow
+    @images = Image.paginate :page => params[:page], :per_page => 7
+  end
+  
+  def wall
+    @images = Image.paginate :page => params[:page], :per_page => 30
+    
+  end
+  
   def index
-    @images = Image.paginate :page => params[:page], :per_page => 50
+    @images = Image.paginate :page => params[:page], :per_page => 80
     respond_to do |format|
       format.html
       format.json{ render :json=>@images}

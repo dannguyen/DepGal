@@ -14,16 +14,11 @@
 			    	
 					jQuery("#result").append("Hello " + images.length)
 					for(var i = 0; i<images.length; i++){
-						$("#images-wrapper").append("<div class=\"image\" style=\"width:"+images[i].thumbnail.width+"px; height:"+images[i].thumbnail.height+"px;\"><img src=\""+images[i].thumbnail.path+ "\" /></div>")
+						var image = images[i];
+						$("#images-strip").css("width", $("#images-strip").width()+image.thumbnail.width )
+						$("#images-strip").append("<div class=\"image\" style=\"width:"+image.thumbnail.width+"px; height:"+image.thumbnail.height+"px;\"><img src=\""+image.thumbnail.path+ "\" /></div>")
 					}
 					
-					
-					jQuery("#images-wrapper").masonry({
-						singleMode: false,
-						columnWidth: 200,
-						resizeable: false,
-						itemSelector: 'div.image'
-					})
 			  }
 			});
 			
@@ -40,8 +35,13 @@
 	
 	<div id="result"></div>
 	
-	<div id="images-hold">
-	<div id="images-wrapper"></div>
+	<div id="images-wrapper">
+		<div id="images-strip">
+			
+			
+			
+		</div>
+		
 	</div>
 	
 </div>	

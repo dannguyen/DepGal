@@ -1,0 +1,28 @@
+<%= javascript_include_tag "/javascripts/spec/wall.js" %>
+
+
+<div class="stuff">
+	<h1>Test</h1>
+	Good <strong id="somebutton">button</strong>
+	
+	<div id="result"></div>
+	
+	<div id="images-wrapper">
+		<div id="small-wall" class="image-wall">
+			
+			<% @images.each do |image| %>
+			<div class="image">
+				<%= image_tag image.thumbnail.path%>
+			</div>	
+			
+			
+			<% end %>
+			
+			
+			
+		</div>
+		
+	</div>
+	
+</div>	
+

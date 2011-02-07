@@ -11,7 +11,7 @@ class Image < ActiveRecord::Base
   @@versions = []
 
   def as_json(options={})
-    {:name=>self.name, :thumbnail=>self.thumbnail(rand(3))}
+    {:name=>self.name, :thumbnail=>self.thumbnail(rand(3)), :large=>self.large}
   end
   
   def self.styles

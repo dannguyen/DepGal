@@ -1,5 +1,9 @@
 Depgal::Application.routes.draw do
   
+  match 'images/index.:format'=>'images#index'
+  match 'images/jtest'=>'images#jtest'
+  match 'images/slideshow'=>'images#slideshow'
+  match 'images/wall'=>'images#wall'
   
   resources :images
   root :to => "images#index"
