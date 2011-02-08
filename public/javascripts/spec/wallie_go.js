@@ -4,7 +4,7 @@ jQuery(document).ready(function(){
 
 		{
 			image_div:"div.image_frame",
-			thumbnail_width:150,
+			thumbnail_width:100,
 			thumbnail_height:100,
 			thumbnail_margin:10,		
 			large_width:800,

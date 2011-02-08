@@ -10,18 +10,3 @@ function WallImage(opt){
 	this.embiggened = false;
 
 }
-
-function cropped_pos(w, h, crop_w, crop_h, orientation){
-	// returns: 
-	// {x:, y:, w:, h:}
-	var obj = {};
-	
-//	if(w > crop_w){
-		obj.w = crop_w;
-		obj.h = crop_w/parseFloat(w) * h;
-		obj.x = (crop_w-obj.w )/2.0;
-		obj.y = (crop_h-obj.h)/2.0;
-//	}
-	return obj;
-}
-
