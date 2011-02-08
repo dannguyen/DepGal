@@ -3,7 +3,7 @@ div#content{
 	height: 800px;
 }
 
-div.image{
+div.image_frame{
 	float:left;
 	margin: 10px;
 	cursor:pointer;
@@ -15,7 +15,7 @@ div.image img{
 
 #images-wrapper{
 	background: #ddffcc;
-	height: 95%;
+	height: 600px;
 	width: 900px;
 	overflow:hidden;
 	position: relative;

@@ -1,4 +1,7 @@
-<%= javascript_include_tag "/javascripts/spec/wall.js" %>
+<%= javascript_include_tag "/javascripts/spec/wall_image.js" %>
+<%= javascript_include_tag "/javascripts/spec/wallie.js" %>
+
+<%= javascript_include_tag "/javascripts/spec/wallie_go.js" %>
 
 
 <div class="stuff">
@@ -11,8 +14,8 @@
 		<div id="small-wall" class="image-wall">
 			
 			<% @images.each do |image| %>
-			<div class="image">
-				<%= image_tag image.thumbnail.path%>
+			<div class="image_frame">
+				<%= image_tag image.thumbnail.path, :style=>"width:#{image.thumbnail.width}px; height:#{image.thumbnail.height}px;"%>
 			</div>	
 			
 			

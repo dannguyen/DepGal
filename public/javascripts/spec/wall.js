@@ -10,13 +10,30 @@ var large_mode = {div:"#large-wall", img_width:800, img_height:600, margin:15}
 var images_wall, images_wrapper;
 
 
+
+var wall_images = [];
+
 jQuery(document).ready(function(){
+	
+	for(var i = 0; i < jQuery("div.image_frame").length; i++ ){
+
+		var img = jQuery("div.image_frame:eq("+i+") img");
+		wall_images.push(
+			new WallImage({
+				a_rect: cropped_pos(img.width(), img.height(), small_mode.img_width, small_mode.img_height),
+				a_url: img.attr("src")
+			})
+			
+		);
+		
+		
+	}
 	
 	// initialize image size
 	
-	$("div.image").css({width:small_mode.img_width, margin:small_mode.margin})
-	$("div.image img").css({width:small_mode.img_width})
-	$("div.image").click(function(){ fooEnlarge($(this))});
+	$("div.image_frame").css({width:small_mode.img_width, margin:small_mode.margin})
+	$("div.image_frame img").css({width:small_mode.img_width})
+	$("div.image_frame").click(function(){ fooEnlarge($(this))});
 	
 	///
 	
@@ -58,8 +75,8 @@ jQuery(document).ready(function(){
 
 function fooEnlarge(jimg){
 	console.log("Scrolling to: " + jimg.find("img").attr("src"));
-//	$("div.image").animate({width:800, height:500}, 800)
-//	$("div.image").find('img').animate({width:800, height:500}, 800)
+//	$("div.image_frame").animate({width:800, height:500}, 800)
+//	$("div.image_frame").find('img').animate({width:800, height:500}, 800)
 	
 	//images_wrapper.scrollTo(jimg, 800)
 	
@@ -82,9 +99,9 @@ function fooEnlarge(jimg){
 		//	fooDarkenImages(jindex);
 			small_mode.wall.animate({width: large_mode.width_max}, 1000);
 			
-			//jQuery("div.image, div.image img")
+			//jQuery("div.image_frame, div.image_frame img")
 			
-			jQuery("div.image:eq("+jindex+"), div.image:eq("+jindex+") img").animate({width:large_mode.img_width, height:large_mode.img_height},
+			jQuery("div.image_frame:eq("+jindex+"), div.image_frame:eq("+jindex+") img").animate({width:large_mode.img_width, height:large_mode.img_height},
 				{
 					duration: 1000,
 					step: function(){
@@ -102,33 +119,10 @@ function fooEnlarge(jimg){
 		
 	}) 
 	 
-	//enlarge small wall
-	
-	
-	
-	/*	,{	
-		duration: 800, 
-	
-		complete: function(){
-			
-			small_mode.wall.animate({width: 10000},
-				
-				{duration:1000,
-					step: function(){
-						small_mode.wall.css
-						small_mode.wall.css("left")
-					}
-				
-				})
-			
-		}
-		
-	});
-	*/
 }
 
 function fooDarkenImages(except_this_i){
-	var images_array = jQuery("div.image")
+	var images_array = jQuery("div.image_frame")
 	console.log(except_this_i + " << lookee")
 	for(var i=0; i< images_array.length; i++){
 		
